@@ -51,13 +51,16 @@ public class ClienteDAO implements IClienteDAO{
             }catch(Exception e){
                 System.out.println("Ha ocurrido un error al intentar cerrar la BD " + e.getMessage() );
             }
-            
-        
         }
-        
-        
+
         return clientes;
     }
+    
+    
+    
+    
+    
+    
 
     @Override
     public boolean buscarClientePorId(cliente cliente) {
@@ -88,25 +91,116 @@ public class ClienteDAO implements IClienteDAO{
             }catch(Exception e){
                 System.out.println("Ha ocurrido un error al intentar cerrar la BD " + e.getMessage() );
             }
-            
-        
         }
-
         return false;
     }
+    
+    
+    
+    
 
     @Override
     public boolean agregarCliente(cliente cliente) {
+        PreparedStatement ps;
+        ResultSet rs;
+        Connection con = getConexion();
+        var sql = "INSERT INTO zona_fit_db.cliente(nombre, apellido, membresia) " + "VALUES(?, ?, ?)";
+        
+        try{
+            ps = con.prepareStatement(sql);
+            ps.setString(1, cliente.getNombre());
+            ps.setString(2, cliente.getApellido());
+            ps.setInt(3, cliente.getMenbresia());
+            ps.execute();
+            
+            return true;
+            
+        
+        }catch(  Exception e ){
+            System.out.println("Ha ocurrido un error al intentar conectarse a BD " + e.getMessage() );
+        }finally{
+        
+            try{
+                con.close();
+            }catch(Exception e){
+                System.out.println("Ha ocurrido un error al intentar cerrar la BD " + e.getMessage() );
+            }      
+        }
         return false;
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     @Override
     public boolean modificarCliente(cliente cliente) {
+        PreparedStatement ps;
+        ResultSet rs;
+        Connection con = getConexion();
+        var sql = "UPDATE zona_fit_db.cliente SET nombre=?, apellido=?, membresia=? WHERE id=?";  
+        
+        try{
+            ps = con.prepareStatement(sql);
+            ps.setString(1, cliente.getNombre());
+            ps.setString(2, cliente.getApellido());
+            ps.setInt(3, cliente.getMenbresia());
+            ps.setInt(4, cliente.getId());
+            ps.execute();
+            
+            return true;
+            
+        
+        }catch(  Exception e ){
+            System.out.println("Ha ocurrido un error al intentar conectarse a BD " + e.getMessage() );
+        }finally{
+        
+            try{
+                con.close();
+            }catch(Exception e){
+                System.out.println("Ha ocurrido un error al intentar cerrar la BD " + e.getMessage() );
+            }
+        }
+        
         return false;
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     @Override
     public boolean eliminarCliente(cliente cliente) {
+        PreparedStatement ps;
+        Connection con = getConexion();
+        var sql = "Delete FROM zona_fit_db.cliente WHERE id=?";  
+         
+        try{
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, cliente.getId());
+            ps.execute();
+            return true;
+      
+        }catch(  Exception e ){
+            System.out.println("Ha ocurrido un error al intentar conectarse a BD " + e.getMessage() );
+        }finally{
+        
+            try{
+                con.close();
+            }catch(Exception e){
+                System.out.println("Ha ocurrido un error al intentar cerrar la BD " + e.getMessage() );
+            }
+        }      
         return false;
     }
 
@@ -116,17 +210,35 @@ public class ClienteDAO implements IClienteDAO{
         
         IClienteDAO clienteDao = new ClienteDAO();
         
-        //var clientes = clienteDao.ListarClientes();
-        //clientes.forEach( System.out::println );
+
         
-        var cliente1 = new cliente(1);
-        var encontrado = clienteDao.buscarClientePorId(cliente1);
-        System.out.println("El cliente que se busco " + cliente1  );
+        //var cliente1 = new cliente(1);
+        //var encontrado = clienteDao.buscarClientePorId(cliente1);
+        //System.out.println("El cliente que se busco " + cliente1  );
         
-        if(encontrado)
-            System.out.println("Se encontro cliente " +  cliente1 );
-        else 
-            System.out.println("No se encontro el cliente con el id: " +  cliente1.getId() );
+        //if(encontrado)
+        //    System.out.println("Se encontro cliente " +  cliente1 );
+        //else 
+        //    System.out.println("No se encontro el cliente con el id: " +  cliente1.getId() );
+        
+        //var cliente1 = new cliente(6);
+        //System.out.println("El cliente que se busco " + cliente1  );
+        
+        
+        //var borrar = clienteDao.eliminarCliente(cliente1);
+        
+        
+        
+        //if(borrar)
+        //    System.out.println("Se borro cliente " +  cliente1 );
+        //else 
+        //   System.out.println("No se borro el cliente:" +  cliente1 );
+        
+        
+        
+        var clientes = clienteDao.ListarClientes();
+        clientes.forEach( System.out::println );
+        
     }
 
    
